@@ -10,10 +10,10 @@ import * as ImagePicker from 'expo-image-picker';
 export default function HomeScreen() {
   const [mediaObject, setMediaObject] = useState<any>(null);
 
-  const pickImage = async () => {
+  const pickImage = async (transcode: boolean) => {
     const {assets} = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      preferredAssetRepresentationMode: ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Current
+      preferredAssetRepresentationMode: transcode ? ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Automatic : ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Current
     })
 
     if (!assets || assets.length === 0) {
@@ -41,9 +41,14 @@ export default function HomeScreen() {
           {JSON.stringify(mediaObject)}
         </ThemedText>
       </ThemedView>
-      <TouchableOpacity onPress={pickImage}>
+      <TouchableOpacity onPress={() => pickImage(true)}>
         <ThemedView style={[styles.stepContainer, styles.button]}>
-          <ThemedText type="subtitle" suppressHighlighting>Pick Image (Click Me)</ThemedText>
+          <ThemedText type="subtitle" suppressHighlighting>Pick Image With Automatic Asset Representation</ThemedText>
+        </ThemedView>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => pickImage(false)}>
+        <ThemedView style={[styles.stepContainer, styles.button]}>
+          <ThemedText type="subtitle" suppressHighlighting>Pick Image With Current Asset Representation</ThemedText>
         </ThemedView>
       </TouchableOpacity>
     </ParallaxScrollView>
